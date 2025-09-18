@@ -1,12 +1,26 @@
 // src/components/Navbar.jsx
 import React, { useState } from "react";
 import { Search, ShoppingCart, User, MapPin, ChevronDown } from "lucide-react";
-import { Link } from "react-router-dom"; // ✅ Import Link
+import { Link } from "react-router-dom";
 import logo from "../assets/icons/logo.svg";
 import playStoreButton from "../assets/images/get-play-store-icon.png";
+import LoginModal from "./LoginModal";
+import RegisterModal from "./RegisterModal";
 
 export default function Navbar() {
     const [cartCount, setCartCount] = useState(0);
+    const [showLoginModal, setShowLoginModal] = useState(false);
+    const [showRegisterModal, setShowRegisterModal] = useState(false);
+
+    const openLoginModal = () => {
+        setShowLoginModal(true);
+        setShowRegisterModal(false);
+    };
+
+    const openRegisterModal = () => {
+        setShowRegisterModal(true);
+        setShowLoginModal(false);
+    };
 
     return (
         <nav className="bg-gradient-to-r from-cyan-500 to-blue-500 shadow-md">
@@ -62,25 +76,41 @@ export default function Navbar() {
                         </div>
 
                         {/* Sign In */}
-                        <Link
-                            to="/login"
+                        <button
+                            onClick={openLoginModal}
                             className="flex items-center bg-white bg-opacity-20 hover:bg-opacity-30 px-3 py-1 rounded-full text-sm transition-all"
                         >
                             <User className="mr-1 text-white" size={18} />
                             <span className="font-medium text-white">Sign In</span>
-                        </Link>
+                        </button>
 
                         {/* Sign Up */}
-                        <Link
-                            to="/register"
+                        <button
+                            onClick={openRegisterModal}
                             className="flex items-center bg-white bg-opacity-20 hover:bg-opacity-30 px-3 py-1 rounded-full text-sm transition-all"
                         >
                             <User className="mr-1 text-white" size={18} />
                             <span className="font-medium text-white">Sign Up</span>
-                        </Link>
+                        </button>
                     </div>
                 </div>
             </div>
+
+            {/* Modals */}
+            {showLoginModal && (
+                <LoginModal
+                    isOpen={showLoginModal}
+                    onClose={() => setShowLoginModal(false)}
+                    onSwitchToRegister={openRegisterModal}
+                />
+            )}
+            {showRegisterModal && (
+                <RegisterModal
+                    isOpen={showRegisterModal}
+                    onClose={() => setShowRegisterModal(false)}
+                    onSwitchToLogin={openLoginModal}
+                />
+            )}
         </nav>
     );
 }
